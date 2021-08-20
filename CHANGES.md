@@ -1,5 +1,9 @@
 # Changes
 
+# cordova-sqlcipher-evmax-ext-build-free 0.0.1-dev
+
+- integrate SQLCipher
+
 # cordova-sqlite-evmax-build-free 0.0.2
 
 - fix evmax build URLs in package.json

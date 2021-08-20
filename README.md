@@ -1,10 +1,9 @@
-# Cordova/PhoneGap sqlite storage evmax - super-premium enterprise version with super-premium stability and performance improvements with limited extra features
+# Cordova/PhoneGap SQLCipher storage - super-premium enterprise version with super-premium stability and performance improvements with limited extra features
 
-Native SQLite component with API based on HTML5/[Web SQL (DRAFT) API](http://www.w3.org/TR/webdatabase/) for the following platforms:
+Native SQLCipher component with API based on HTML5/[Web SQL (DRAFT) API](http://www.w3.org/TR/webdatabase/) for the following platforms:
 - Android
 - iOS
-- macOS ("osx" platform)
-- Windows 10 (UWP) DESKTOP ~~and MOBILE~~ (see below for major limitations)
+- ~~Windows 10 (UWP) DESKTOP (...) (see below for major limitations)~~ - __not enabled__ , no encryption at this point
 
 <!-- [TBD] HIDE browser usage notes for now (at least):
 Browser platform is currently supported with some limitations as described in [browser platform usage notes](#browser-platform-usage-notes) section below, will be supported with more features such as numbered parameters and SQL batch API in the near future.
@@ -18,6 +17,7 @@ This plugin version is available under GPL v3 (<https://www.gnu.org/licenses/gpl
 
 ## WARNINGS
 
+- IMPORTANT EXPORT REQUIREMENTS ref: <https://github.com/brodybits/ask-me-anything/issues/20>
 - **Multiple SQLite corruption problem** - see section below & [`xpbrew/cordova-sqlite-storage#626`](https://github.com/xpbrew/cordova-sqlite-storage/issues/626)
 - **Breaking changes coming soon** - see section nearby & see [`xpbrew/cordova-sqlite-storage#922`](https://github.com/xpbrew/cordova-sqlite-storage/issues/922)
 
@@ -63,8 +63,9 @@ Super-premium enterprise version with additional performance and stability impro
 
 ### Multiple SQLite problem on Android
 
-This plugin uses non-standard [storesafe/android-sqlite-evplus-ndk-driver-free](https://github.com/storesafe/android-sqlite-evplus-ndk-driver-free) sqlite database access implementation on Android. In case an application access the SAME database using multiple plugins there is a risk of data corruption ref: [xpbrew/cordova-sqlite-storage#626](https://github.com/xpbrew/cordova-sqlite-storage/issues/626)) as described in <http://ericsink.com/entries/multiple_sqlite_problem.html> and <https://www.sqlite.org/howtocorrupt.html>.
+This plugin uses non-standard <https://github.com/brodybits/android-database-sqlcipher-evplus-ext-ndk-driver-build-free> database access implementation on Android. In case an application access the SAME database using multiple plugins there is a risk of data corruption ref: [xpbrew/cordova-sqlite-storage#626](https://github.com/xpbrew/cordova-sqlite-storage/issues/626)) as described in <http://ericsink.com/entries/multiple_sqlite_problem.html> and <https://www.sqlite.org/howtocorrupt.html>.
 
+<!--
 The workaround is to use the `androidDatabaseProvider: 'system'` setting as described in the [Android database provider](#android-database-provider) section below:
 
 ```js
@@ -74,10 +75,11 @@ var db = window.sqlitePlugin.openDatabase({
   androidDatabaseProvider: 'system'
 });
 ```
+- -->
 
 ### Multiple SQLite problem on other platforms
 
-This plugin version also uses a fixed version of sqlite3 on iOS, macOS, and Windows. In case the application accesses the SAME database using multiple plugins there is a risk of data corruption as described in <https://www.sqlite.org/howtocorrupt.html> (similar to the multiple sqlite problem for Android as described in <http://ericsink.com/entries/multiple_sqlite_problem.html>).
+This plugin version also uses a fixed version of SQLCipher based on SQLite3 on iOS & macOS. In case the application accesses the SAME database using multiple plugins there is a risk of data corruption as described in <https://www.sqlite.org/howtocorrupt.html> (similar to the multiple sqlite problem for Android as described in <http://ericsink.com/entries/multiple_sqlite_problem.html>).
 
 <!-- END WARNING: Multiple SQLite problem -->
 
@@ -194,15 +196,18 @@ See the [Sample section](#sample) for a sample with a more detailed explanation 
 
 - Patches will **not** be accepted on this plugin version due to some possible licensing issues.
 - This plugin is **not** supported by PhoneGap Developer App or PhoneGap Desktop App.
-- This plugin version includes the SQLite and compiled [android-sqlite-evplus-ndk-driver-free](https://github.com/storesafe/android-sqlite-evplus-ndk-driver-free) dependencies to work with PhoneGap Build and other some other build systems such as Cordova Plugman, PhoneGap CLI, and Intel XDK.
 - A recent version of the Cordova CLI is recommended. Known issues with older versions of Cordova:
   - Cordova pre-7.0.0 do not automatically save the state of added plugins and platforms (`--save` flag is needed for Cordova pre-7.0.0)
   - It may be needed to use `cordova prepare` in case of cordova-ios pre-4.3.0 (Cordova CLI `6.4.0`).
   - Cordova versions older than `6.0.0` are missing the `cordova-ios@4.0.0` security fixes.
+- SQLCipher version information:
+  - SQLCipher `4.4.3` with OpenSSL 1.1.1k for Android: <https://github.com/brodybits/android-database-sqlcipher-evplus-ext-ndk-driver-build-free>
+  - SQLCipher `4.4.3` using the Apple Security framework for iOS and macOS ("osx")
+- This plugin version has all dependencies included and should work with build systems such as Intel XDK.
 - This plugin version includes the following extra (non-standard) features:
   - BASE64 integrated from [brodybits / sqlite3-base64](https://github.com/brodybits/sqlite3-base64), using [brodybits / libb64-encode](https://github.com/brodybits/libb64-encode) (based on <http://libb64.sourceforge.net/> by Chris Venter, public domain)
   - REGEXP for Android (default Android-sqlite-connector database implementation), iOS, and macOS using [brodybits / sqlite3-regexp-cached](https://github.com/brodybits/sqlite3-regexp-cached) (based on <http://git.altlinux.org/people/at/packages/?p=sqlite3-pcre.git> by Alexey Tourbin, public domain)
-- SQLite __`3.35.4`__ included when building (all platforms), with the following compile-time definitions:
+- SQLite / SQLCipher compile-time definitions:
   - `SQLITE_THREADSAFE=1`
   - `SQLITE_DEFAULT_SYNCHRONOUS=3` (EXTRA DURABLE build setting) ref: [xpbrew/cordova-sqlite-storage#736](https://github.com/xpbrew/cordova-sqlite-storage/issues/736)
   - `SQLITE_LOCKING_STYLE=1` on iOS/macOS ONLY
@@ -303,7 +308,7 @@ and window functions
   - Keeps sqlite database in known, platform specific user data location on all supported platforms (Android/iOS/macOS/Windows), which can be reconfigured on iOS/macOS. Whether or not the database on the iOS platform is synchronized to iCloud depends on the selected database location.
   - No arbitrary size limit. SQLite limits described at: <http://www.sqlite.org/limits.html>
 - Also validated for multi-page applications by internal test selfTest function.
-- This project is self-contained though with sqlite3 dependencies auto-fetched by npm. There are no dependencies on other plugins such as cordova-plugin-file.
+- This project is self-contained ~~though with sqlite3 dependencies auto-fetched by npm~~. There are no dependencies on other plugins such as cordova-plugin-file.
 - Windows platform version uses a customized version of the performant [doo / SQLite3-WinRT](https://github.com/doo/SQLite3-WinRT) C++ component.
 - [SQLCipher](https://www.zetetic.net/sqlcipher/) support for Android/iOS/macOS/Windows is available in: [brodybits / cordova-sqlcipher-adapter](https://github.com/brodybits/cordova-sqlcipher-adapter)
 - Intellectual property:
@@ -1812,8 +1817,7 @@ function closeDB() {
 - `SQLitePlugin.coffee.md`: platform-independent (Literate CoffeeScript, can be compiled with a recent CoffeeScript (1.x) compiler)
 - `www`: platform-independent Javascript as generated from `SQLitePlugin.coffee.md` using `coffeescript@1` (and committed!)
 - `src`: platform-specific source code
-- `node_modules`: placeholder for external dependencies
-- `scripts`: installation hook script to fetch the external dependencies via `npm`
+- `scripts`: _helper script for testing only_
 - `spec`: test suite using Jasmine (`2.5.2`), also passes on (WebKit) Web SQL on Android, iOS, Safari desktop browser, and Chrome desktop browser
 - `tests`: very simple Jasmine test suite that is run on Circle CI (Android platform) and Travis CI (iOS platform) (used as a placeholder)
 

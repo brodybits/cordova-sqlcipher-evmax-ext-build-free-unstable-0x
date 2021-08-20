@@ -432,6 +432,7 @@ public class SQLitePlugin extends CordovaPlugin {
     private class DBRunner implements Runnable {
         final int dbid;
         final String dbname;
+        final String dbkey;
         // expose oldImpl:
         boolean oldImpl;
         private boolean bugWorkaround;
@@ -445,6 +446,18 @@ public class SQLitePlugin extends CordovaPlugin {
         DBRunner(final String dbname, JSONObject options, CallbackContext cbc, int dbid) {
             this.dbid = dbid;
             this.dbname = dbname;
+
+            String key = ""; // (no encryption by default)
+            if (options.has("key")) {
+                try {
+                    key = options.getString("key");
+                } catch (JSONException e) {
+                    // NOTE: this should not happen!
+                    Log.e(SQLitePlugin.class.getSimpleName(), "unexpected JSON error getting password key, ignored", e);
+                }
+            }
+            this.dbkey = key;
+
             this.oldImpl = options.has("androidOldDatabaseImplementation");
             Log.v(SQLitePlugin.class.getSimpleName(), "Android db implementation: built-in android.database.sqlite package");
             this.bugWorkaround = this.oldImpl && options.has("androidBugWorkaround");
@@ -461,6 +474,9 @@ public class SQLitePlugin extends CordovaPlugin {
                     this.mydb = this.mydb1 = openDatabase(dbname, false, this.openCbc, this.oldImpl, this.dbid);
                 else
                     this.mydb = openDatabase2(dbname, false, this.openCbc, this.oldImpl);
+
+                if (!oldImpl && this.dbkey != "")
+                    EVNDKDriver.sqlc_db_key_native_string(mydb1.mydbhandle, this.dbkey);
             } catch (Exception e) {
                 Log.e(SQLitePlugin.class.getSimpleName(), "unexpected error, stopping db thread", e);
                 dbrmap.remove(dbname);
