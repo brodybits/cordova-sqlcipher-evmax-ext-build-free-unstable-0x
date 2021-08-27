@@ -2,6 +2,7 @@
 
 # cordova-sqlcipher-evmax-ext-build-free 0.0.2-dev
 
+- remove open database logging
 - disable support on Windows in plugin.xml
 
 # cordova-sqlcipher-evmax-ext-build-free 0.0.1-dev

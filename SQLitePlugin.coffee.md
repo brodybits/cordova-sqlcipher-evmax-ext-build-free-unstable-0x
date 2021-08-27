@@ -106,7 +106,7 @@
 
       @openSuccess or
         @openSuccess = ->
-          console.log "DB opened: " + dbname
+          # console.log "DB opened: " + dbname
           return
 
       @openError or
@@ -143,7 +143,7 @@
 
       else
         if @dbname of @openDBs
-          console.log 'new transaction is queued, waiting for open operation to finish'
+          # console.log 'new transaction is queued, waiting for open operation to finish'
         else
           # XXX SHOULD NOT GET HERE.
           # FUTURE TBD TODO: in this exceptional case abort and discard the transaction.
@@ -235,7 +235,7 @@
 
           # distinguish use of flat JSON batch sql interface
           if !!fjinfo and !!fjinfo.dbid
-            console.log 'Detected Android/iOS/macOS platform version with flat JSON interface'
+            # console.log 'Detected Android/iOS/macOS platform version with flat JSON interface'
             @dbidmap[@dbname] = @dbid = fjinfo.dbid
             @fjmap[@dbname] = true
 

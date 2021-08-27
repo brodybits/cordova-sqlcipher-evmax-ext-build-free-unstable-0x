@@ -82,9 +82,7 @@ Contact for commercial license: sales@litehelpers.net
     this.dbname = dbname;
     this.openSuccess = openSuccess;
     this.openError = openError;
-    this.openSuccess || (this.openSuccess = function() {
-      console.log("DB opened: " + dbname);
-    });
+    this.openSuccess || (this.openSuccess = function() {});
     this.openError || (this.openError = function(e) {
       console.log(e.message);
     });
@@ -113,7 +111,7 @@ Contact for commercial license: sales@litehelpers.net
       this.startNextTransaction();
     } else {
       if (this.dbname in this.openDBs) {
-        console.log('new transaction is queued, waiting for open operation to finish');
+
       } else {
         console.log('database is closed, new transaction is [stuck] waiting until db is opened again!');
       }
@@ -189,7 +187,6 @@ Contact for commercial license: sales@litehelpers.net
           var txLock;
           console.log('OPEN database: ' + _this.dbname + ' - OK');
           if (!!fjinfo && !!fjinfo.dbid) {
-            console.log('Detected Android/iOS/macOS platform version with flat JSON interface');
             _this.dbidmap[_this.dbname] = _this.dbid = fjinfo.dbid;
             _this.fjmap[_this.dbname] = true;
           }
