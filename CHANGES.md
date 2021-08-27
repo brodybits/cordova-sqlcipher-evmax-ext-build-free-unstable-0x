@@ -2,6 +2,8 @@
 
 # cordova-sqlcipher-evmax-ext-build-free 0.0.2-dev
 
+- disable support on Windows in plugin.xml
+
 # cordova-sqlcipher-evmax-ext-build-free 0.0.1-dev
 
 - integrate SQLCipher
