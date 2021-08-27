@@ -1,5 +1,7 @@
 # Changes
 
+# cordova-sqlcipher-evmax-ext-build-free 0.0.2-dev
+
 # cordova-sqlcipher-evmax-ext-build-free 0.0.1-dev
 
 - integrate SQLCipher
