@@ -255,7 +255,7 @@ public class SQLitePlugin extends CordovaPlugin {
                 dbfile.getParentFile().mkdirs();
             }
 
-            Log.v("info", "Open sqlite db: " + dbfile.getAbsolutePath());
+            // Log.v("info", "Open sqlite db: " + dbfile.getAbsolutePath());
 
             SQLiteNativeDatabase mydb = new SQLiteNativeDatabase();
             mydb.open(dbfile);
@@ -459,7 +459,8 @@ public class SQLitePlugin extends CordovaPlugin {
             this.dbkey = key;
 
             this.oldImpl = options.has("androidOldDatabaseImplementation");
-            Log.v(SQLitePlugin.class.getSimpleName(), "Android db implementation: built-in android.database.sqlite package");
+            // XXX GONE DUE TO POSSIBLY INCORRECT INFO
+            // Log.v(SQLitePlugin.class.getSimpleName(), "Android db implementation: built-in android.database.sqlite package");
             this.bugWorkaround = this.oldImpl && options.has("androidBugWorkaround");
             if (this.bugWorkaround)
                 Log.v(SQLitePlugin.class.getSimpleName(), "Android db closing/locking workaround applied");

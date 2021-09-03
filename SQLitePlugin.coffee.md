@@ -212,7 +212,7 @@
 
     SQLitePlugin::open = (success, error) ->
       if @dbname of @openDBs
-        console.log 'database already open: ' + @dbname
+        # console.log 'database already open: ' + @dbname
 
         @dbid = @dbidmap[@dbname]
 
@@ -227,11 +227,11 @@
 
       else
         # openDatabase step 1:
-        console.log 'OPEN database: ' + @dbname
+        # console.log 'OPEN database: ' + @dbname
 
         opensuccesscb = (fjinfo) =>
           # NOTE: the db state is NOT stored (in @openDBs) if the db was closed or deleted.
-          console.log 'OPEN database: ' + @dbname + ' - OK'
+          # console.log 'OPEN database: ' + @dbname + ' - OK'
 
           # distinguish use of flat JSON batch sql interface
           if !!fjinfo and !!fjinfo.dbid
@@ -296,7 +296,7 @@
           error newSQLError 'database cannot be closed while a transaction is in progress'
           return
 
-        console.log 'CLOSE database: ' + @dbname
+        # console.log 'CLOSE database: ' + @dbname
 
         # NOTE: closing one db handle disables other handles to same db
         # FUTURE TBD TODO ref litehelpers/Cordova-sqlite-storage#210:

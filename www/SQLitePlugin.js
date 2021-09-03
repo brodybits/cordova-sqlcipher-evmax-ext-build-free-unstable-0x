@@ -173,7 +173,6 @@ Contact for commercial license: sales@litehelpers.net
   SQLitePlugin.prototype.open = function(success, error) {
     var openerrorcb, opensuccesscb, step2;
     if (this.dbname in this.openDBs) {
-      console.log('database already open: ' + this.dbname);
       this.dbid = this.dbidmap[this.dbname];
       nextTick((function(_this) {
         return function() {
@@ -181,11 +180,9 @@ Contact for commercial license: sales@litehelpers.net
         };
       })(this));
     } else {
-      console.log('OPEN database: ' + this.dbname);
       opensuccesscb = (function(_this) {
         return function(fjinfo) {
           var txLock;
-          console.log('OPEN database: ' + _this.dbname + ' - OK');
           if (!!fjinfo && !!fjinfo.dbid) {
             _this.dbidmap[_this.dbname] = _this.dbid = fjinfo.dbid;
             _this.fjmap[_this.dbname] = true;
@@ -240,7 +237,6 @@ Contact for commercial license: sales@litehelpers.net
         error(newSQLError('database cannot be closed while a transaction is in progress'));
         return;
       }
-      console.log('CLOSE database: ' + this.dbname);
       delete this.openDBs[this.dbname];
       if (txLocks[this.dbname]) {
         console.log('closing db with transaction queue length: ' + txLocks[this.dbname].queue.length);
